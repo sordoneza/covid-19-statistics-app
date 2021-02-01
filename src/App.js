@@ -19,24 +19,9 @@ const Loading = () => (
   </AppContainer>
 );
 
-const UnauthenticatedRoutes = () => (
-  <Switch>
-    <Route path="/login">
-      <Login />
-    </Route>
-    <Route path="/signup">
-      <Signup />
-    </Route>
-    <Route path="/">
-      <AppContainer>
-        <Home />
-      </AppContainer>
-    </Route>
-    <Route path="*">
-      <NotFound />
-    </Route>
-  </Switch>
-);
+const UnauthenticatedRoutes = ({ children, ...rest }) => {
+  return <Route {...rest} render={() => <AppContainer>{children}</AppContainer>}></Route>;
+};
 
 const AuthenticatedRoute = ({ children, ...rest }) => {
   const auth = useContext(AuthContext);
@@ -56,7 +41,18 @@ const AppRoutes = () => {
           <AuthenticatedRoute path="/statistics">
             <Statistics />
           </AuthenticatedRoute>
-          <UnauthenticatedRoutes />
+          <UnauthenticatedRoutes path="/login">
+            <Login />
+          </UnauthenticatedRoutes>
+          <UnauthenticatedRoutes path="/signup">
+            <Signup />
+          </UnauthenticatedRoutes>
+          <UnauthenticatedRoutes exact path="/">
+            <Home />
+          </UnauthenticatedRoutes>
+          <UnauthenticatedRoutes path="*">
+            <NotFound />
+          </UnauthenticatedRoutes>
         </Switch>
       </Suspense>
     </>

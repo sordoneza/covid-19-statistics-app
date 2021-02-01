@@ -7,21 +7,23 @@ const Header = () => {
   const auth = useContext(AuthContext);
   return (
     <nav>
-      <h3>COVID 19 Statistics</h3>
-      <ul className="nav-list">
-        {auth.isAuthenticated() && <li>Welcome, {auth.userInfo.email}</li>}
+      <div className="d-flex">
+        <h3 className="mr-auto p-2">COVID 19 Statistics</h3>
+        <ul className="d-flex ">
+          {auth.isAuthenticated() && <li>Welcome, {auth.userInfo.email}</li>}
 
-        {!auth.isAuthenticated() && (
-          <li>
-            <Link to="/login">Log in</Link>
-          </li>
-        )}
-        {!auth.isAuthenticated() && (
-          <li>
-            <Link to="/signup">Sign up</Link>
-          </li>
-        )}
-      </ul>
+          {!auth.isAuthenticated() && (
+            <li>
+              <Link to="/login">Log in</Link>
+            </li>
+          )}
+          {!auth.isAuthenticated() && (
+            <li>
+              <Link to="/signup">Sign up</Link>
+            </li>
+          )}
+        </ul>
+      </div>
     </nav>
   );
 };

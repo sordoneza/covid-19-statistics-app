@@ -6,6 +6,7 @@
   color: #333;
 }
 
-a {
-  text-decoration: none;
+ul {
+  list-style-type: none;
 }
+
