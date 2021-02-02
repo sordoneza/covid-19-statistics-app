@@ -1,5 +1,10 @@
 import React, { lazy, Suspense, useContext } from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from 'react-router-dom';
 
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import { FetchProvider } from './context/FetchContext';
@@ -20,7 +25,12 @@ const Loading = () => (
 );
 
 const UnauthenticatedRoutes = ({ children, ...rest }) => {
-  return <Route {...rest} render={() => <AppContainer>{children}</AppContainer>}></Route>;
+  return (
+    <Route
+      {...rest}
+      render={() => <AppContainer>{children}</AppContainer>}
+    ></Route>
+  );
 };
 
 const AuthenticatedRoute = ({ children, ...rest }) => {
@@ -28,7 +38,13 @@ const AuthenticatedRoute = ({ children, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={() => (auth.isAuthenticated() ? <AppContainer>{children}</AppContainer> : <Redirect to="/" />)}
+      render={() =>
+        auth.isAuthenticated() ? (
+          <AppContainer>{children}</AppContainer>
+        ) : (
+          <Redirect to="/" />
+        )
+      }
     ></Route>
   );
 };
@@ -59,7 +75,7 @@ const AppRoutes = () => {
   );
 };
 
-function App() {
+const App = () => {
   return (
     <Router>
       <AuthProvider>
@@ -71,6 +87,6 @@ function App() {
       </AuthProvider>
     </Router>
   );
-}
+};
 
 export default App;
