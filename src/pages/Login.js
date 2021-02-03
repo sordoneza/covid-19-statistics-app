@@ -16,12 +16,15 @@ const Login = () => {
   const authContext = useContext(AuthContext);
   const [redirectOnLogin, setRedirectOnLogin] = useState(false);
 
-  const submitCredentials = async credentials => {
-    const { data } = await publicFetch.post('/auth/login', credentials);
+  const submitCredentials = async (credentials, setErrors) => {
+    try {
+      const { data } = await publicFetch.post('/auth/login', credentials);
 
-    authContext.setAuthState(data);
-
-    setRedirectOnLogin(true);
+      authContext.setAuthState(data);
+      setRedirectOnLogin(true);
+    } catch (err) {
+      setErrors({ password: 'User or password incorrect' });
+    }
   };
 
   return (
@@ -33,7 +36,9 @@ const Login = () => {
             email: '',
             password: '',
           }}
-          onSubmit={values => submitCredentials(values)}
+          onSubmit={(values, { setErrors }) =>
+            submitCredentials(values, setErrors)
+          }
           validationSchema={LoginSchema}
         >
           {({ values, handleChange, handleSubmit, errors }) => (

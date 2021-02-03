@@ -1,17 +1,39 @@
 import React, { useContext } from 'react';
 import { Button } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import './Header.css';
+import { FetchContext } from '../context/FetchContext';
 
 const AuthNavItem = ({ authState, logout }) => {
+  const fetchContext = useContext(FetchContext);
+  const history = useHistory();
+
+  const handleLogout = async () => {
+    // Request to logout from server to delete refresh token
+    const { data } = await fetchContext.authAxios.post('/auth/logout');
+
+    return data;
+  };
+
+  const handleSync = async () => {
+    // Request to logout from server to delete refresh token
+    const { data } = await fetchContext.authAxios.get('/sync');
+
+    if (data) history.push('/statistics');
+  };
+
   return (
     <>
       <li>
         <h5 className="p-2">Welcome, {authState.userInfo.email}</h5>
       </li>
       <li>
-        <Button color="link" className="border-0" onClick={() => logout()}>
+        <Button color="link" onClick={() => handleSync()}>
+          Sync
+        </Button>
+
+        <Button color="link" onClick={() => logout(handleLogout)}>
           Log Out
         </Button>
       </li>

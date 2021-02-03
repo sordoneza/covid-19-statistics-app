@@ -9,19 +9,24 @@ import { Redirect } from 'react-router-dom';
 
 const SignUpSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
-  password: Yup.string().required('Password is required'),
+  password: Yup.string()
+    .min(8, 'Password min lenght is 8 characters')
+    .required('Password is required'),
 });
 
 const Signup = () => {
   const authContext = useContext(AuthContext);
   const [redirectOnLogin, setRedirectOnLogin] = useState(false);
 
-  const submitCredentials = async credentials => {
-    const { data } = await publicFetch.post('/auth/signup', credentials);
+  const submitCredentials = async (credentials, setErrors) => {
+    try {
+      const { data } = await publicFetch.post('/auth/signup', credentials);
 
-    authContext.setAuthState(data);
-
-    setRedirectOnLogin(true);
+      authContext.setAuthState(data);
+      setRedirectOnLogin(true);
+    } catch (err) {
+      setErrors({ email: 'User already exist' });
+    }
   };
 
   return (
@@ -33,7 +38,9 @@ const Signup = () => {
             email: '',
             password: '',
           }}
-          onSubmit={values => submitCredentials(values)}
+          onSubmit={(values, { setErrors }) =>
+            submitCredentials(values, setErrors)
+          }
           validationSchema={SignUpSchema}
         >
           {({ values, handleChange, handleSubmit, errors }) => (

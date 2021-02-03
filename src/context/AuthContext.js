@@ -8,33 +8,45 @@ const { Provider } = AuthContext;
 const AuthProvider = ({ children }) => {
   const history = useHistory();
 
+  const refreshToken = localStorage.getItem('refreshToken');
+
   // Auth State
   const [authState, setAuthState] = useState({
     token: undefined,
+    refreshToken,
     userInfo: {},
     expiresAt: undefined,
   });
 
-  const setAuthInfo = ({ accessToken, userInfo, expiresAt }) => {
+  const setAuthInfo = ({ accessToken, refreshToken, userInfo, expiresAt }) => {
+    localStorage.setItem('refreshToken', refreshToken);
     setAuthState({
       token: accessToken,
+      refreshToken,
       userInfo,
       expiresAt,
     });
   };
 
   // Handle refreshToken
-  const refreshToken = async () => {
+  const handleRefreshToken = async () => {
     try {
+      const { refreshToken } = authState;
+
       // Request new access token
-      const { data } = await publicFetch.get('/auth/refreshToken');
+      const { data } = await publicFetch.post('/auth/refreshToken', {
+        refreshToken,
+      });
+
+      // Create Auth Object to update state
+      const auth = Object.assign({}, data, { refreshToken });
 
       // Schedule automatic refreh request when the accessToken is about to expire
       setTimeout(() => {
-        refreshToken();
+        handleRefreshToken();
       }, data.expiresAt * 1000 - 500);
 
-      setAuthInfo(data);
+      setAuthInfo(auth);
     } catch (err) {
       setAuthInfo({});
       history.push('/login');
@@ -42,12 +54,12 @@ const AuthProvider = ({ children }) => {
   };
 
   // Handle Logout
-  const logout = async () => {
-    // Request to logout from server to delete refresh token
-    const { data } = await publicFetch.get('/auth/logout');
+  const logout = async callback => {
+    const data = await callback();
 
-    // Clear auth State and redict to Login
     if (data) {
+      // Clear auth State and redict to Login
+      localStorage.removeItem('refreshToken');
       setAuthState({});
       history.push('/login');
     }
@@ -65,7 +77,7 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    refreshToken();
+    handleRefreshToken();
   }, []);
 
   return (

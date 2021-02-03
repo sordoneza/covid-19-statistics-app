@@ -6,7 +6,18 @@
   color: #333;
 }
 
+body {
+  margin-bottom: 50px !important;
+}
+
 ul {
   list-style-type: none;
 }
 
+.search-navBar {
+  position: sticky;
+  top: 0px;
+  z-index: 1020;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05), 0 -1px 0 rgba(0, 0, 0, 0.15);
+  background-color: rgba(255, 255, 2555, 0.95);
+}

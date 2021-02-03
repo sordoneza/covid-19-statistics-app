@@ -5,11 +5,9 @@ import Footer from './components/Footer';
 const AppContainer = ({ children }) => {
   return (
     <>
-      <div className="flex">
-        <Header />
-        <main id="content">{children}</main>
-        <Footer />
-      </div>
+      <Header />
+      <main className="container">{children}</main>
+      <Footer />
     </>
   );
 };

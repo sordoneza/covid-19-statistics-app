@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import NotFound from './pages/NotFound';
 import Home from './pages/Home';
+import StatisticDetail from './pages/StatisticDetail';
 
 const Statistics = lazy(() => import('./pages/Statistic'));
 
@@ -54,6 +55,9 @@ const AppRoutes = () => {
     <>
       <Suspense fallback={<Loading />}>
         <Switch>
+          <AuthenticatedRoute path="/statistics/:id">
+            <StatisticDetail />
+          </AuthenticatedRoute>
           <AuthenticatedRoute path="/statistics">
             <Statistics />
           </AuthenticatedRoute>
