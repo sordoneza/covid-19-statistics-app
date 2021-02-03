@@ -48,6 +48,7 @@ const StatisticDetail = () => {
           open={displayDialog}
           toggle={toggleDialog}
           stat={stat}
+          updateStat={setStat}
           updateOption={updateOption}
         />
       )}
@@ -103,6 +104,13 @@ const StatisticDetail = () => {
             <Card body outline color="info">
               <CardTitle tag="h5" className="text-info">
                 Tests
+                <Button
+                  className="float-right"
+                  color="link"
+                  onClick={() => toggleDialog('Tests')}
+                >
+                  Update
+                </Button>
               </CardTitle>
               <NumberCardText label="TESTS/1M POP" value={tests.M_POP} />
               <NumberCardText label="Total" value={tests.total} />
@@ -111,8 +119,15 @@ const StatisticDetail = () => {
             <Card body outline color="danger">
               <CardTitle tag="h5" className="text-danger">
                 Deaths
+                <Button
+                  className="float-right"
+                  color="link"
+                  onClick={() => toggleDialog('Deaths')}
+                >
+                  Update
+                </Button>
               </CardTitle>
-              <NumberCardText label={'New'} value={deaths.newers} />
+              <NumberCardText label="New" value={deaths.newers} />
               <NumberCardText label="DEATHS/1M POP" value={deaths.M_POP} />
               <NumberCardText label="Total" value={deaths.total} />
             </Card>
