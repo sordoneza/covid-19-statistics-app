@@ -1,13 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import './Header.css';
 import { FetchContext } from '../context/FetchContext';
+import LoadingButton from './LoadingButton';
+import './Header.css';
 
 const AuthNavItem = ({ authState, logout }) => {
   const fetchContext = useContext(FetchContext);
   const history = useHistory();
+  const [loading, setLoading] = useState(false);
 
   const handleLogout = async () => {
     // Request to logout from server to delete refresh token
@@ -17,10 +19,19 @@ const AuthNavItem = ({ authState, logout }) => {
   };
 
   const handleSync = async () => {
-    // Request to logout from server to delete refresh token
-    const { data } = await fetchContext.authAxios.get('/sync');
+    setLoading(true);
 
-    if (data) history.push('/statistics');
+    // Request to sync data
+    try {
+      const { data } = await fetchContext.authAxios.get('/sync');
+
+      if (data) {
+        setLoading(false);
+        history.push('/');
+      }
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
   return (
@@ -29,9 +40,13 @@ const AuthNavItem = ({ authState, logout }) => {
         <h5 className="p-2">Welcome, {authState.userInfo.email}</h5>
       </li>
       <li>
-        <Button color="link" onClick={() => handleSync()}>
+        <LoadingButton
+          color="link"
+          loading={loading}
+          onClick={() => handleSync()}
+        >
           Sync
-        </Button>
+        </LoadingButton>
 
         <Button color="link" onClick={() => logout(handleLogout)}>
           Log Out

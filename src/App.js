@@ -5,7 +5,7 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom';
-
+import { ModalProvider } from 'styled-react-modal';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import { FetchProvider } from './context/FetchContext';
 
@@ -82,13 +82,15 @@ const AppRoutes = () => {
 const App = () => {
   return (
     <Router>
-      <AuthProvider>
-        <FetchProvider>
-          <div>
-            <AppRoutes />
-          </div>
-        </FetchProvider>
-      </AuthProvider>
+      <ModalProvider>
+        <AuthProvider>
+          <FetchProvider>
+            <div>
+              <AppRoutes />
+            </div>
+          </FetchProvider>
+        </AuthProvider>
+      </ModalProvider>
     </Router>
   );
 };

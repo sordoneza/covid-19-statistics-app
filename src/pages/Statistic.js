@@ -28,23 +28,11 @@ const StatisticItem = ({ stat }) => {
           <NumberText
             label="Total Population"
             value={population}
-            className={'text-primary'}
+            variant="primary"
           />{' '}
-          <NumberText
-            label="Cases"
-            value={totalCases}
-            className={'text-warning'}
-          />{' '}
-          <NumberText
-            label="Tests"
-            value={totalTest}
-            className={'text-success'}
-          />{' '}
-          <NumberText
-            label="Deaths"
-            value={totalDeaths}
-            className={'text-danger'}
-          />
+          <NumberText label="Cases" value={totalCases} variant="warning" />{' '}
+          <NumberText label="Tests" value={totalTest} variant="success" />{' '}
+          <NumberText label="Deaths" value={totalDeaths} variant="danger" />
           <Link className="float-right" to={`/statistics/${country}`}>
             More details...
           </Link>
@@ -90,7 +78,7 @@ const Statistict = () => {
 
   useEffect(() => {
     getStatisticts();
-  }, [fetchContext]);
+  }, []);
 
   return (
     <>

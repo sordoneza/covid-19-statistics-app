@@ -1,20 +1,22 @@
 import React from 'react';
 import numeral from 'numeral';
+import { CardText } from 'reactstrap';
 import clsx from 'clsx';
 
-const NumberText = ({ label, value, variant }) => {
+const NumberCardText = ({ label, value, variant }) => {
   if (!value) return <></>;
   return (
     <>
-      <span
+      <CardText
         className={clsx({
           [`text-${variant}`]: variant,
+          'font-weight-bold': !variant,
         })}
       >
         {label}: {numeral(value).format(0.0)}
-      </span>
+      </CardText>
     </>
   );
 };
 
-export default NumberText;
+export default NumberCardText;
