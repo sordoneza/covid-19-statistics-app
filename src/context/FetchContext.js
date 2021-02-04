@@ -13,26 +13,26 @@ const FetchProvider = ({ children }) => {
   });
 
   authAxios.interceptors.request.use(
-    (config) => {
+    config => {
       config.headers.Authorization = `Bearer ${authContext.authState.token}`;
       return config;
     },
-    (error) => {
+    error => {
       return Promise.reject(error);
-    }
+    },
   );
 
   authAxios.interceptors.response.use(
-    (response) => {
+    response => {
       return response;
     },
-    (error) => {
+    error => {
       const code = error && error.response ? error.response.status : 0;
       if (code === 401 || code === 403) {
         console.log('error code', code);
       }
       return Promise.reject(error);
-    }
+    },
   );
 
   return (

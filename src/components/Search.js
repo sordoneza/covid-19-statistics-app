@@ -22,7 +22,7 @@ const Search = ({ getStatisticts }) => {
                 id="countryId"
                 type="text"
                 className="form-control"
-                placeholder="Search By Country"
+                placeholder="Search By Country (Write the name and hit enter)"
                 value={values.countryId}
                 onChange={handleChange}
               />

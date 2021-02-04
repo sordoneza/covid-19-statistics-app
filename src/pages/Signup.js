@@ -5,13 +5,14 @@ import * as Yup from 'yup';
 import { AuthContext } from '../context/AuthContext';
 import './Auth.css';
 import { publicFetch } from '../utils/fetch';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 const SignUpSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
   password: Yup.string()
     .min(8, 'Password min lenght is 8 characters')
     .required('Password is required'),
+  confirmPassword: Yup.string().required('Confirm Password is required'),
 });
 
 const Signup = () => {
@@ -20,7 +21,16 @@ const Signup = () => {
 
   const submitCredentials = async (credentials, setErrors) => {
     try {
-      const { data } = await publicFetch.post('/auth/signup', credentials);
+      const { email, password, confirmPassword } = credentials;
+
+      if (password !== confirmPassword) {
+        setErrors({ confirmPassword: 'Password do not match' });
+        return;
+      }
+
+      const user = { email, password };
+
+      const { data } = await publicFetch.post('/auth/signup', user);
 
       authContext.setAuthState(data);
       setRedirectOnLogin(true);
@@ -37,6 +47,7 @@ const Signup = () => {
           initialValues={{
             email: '',
             password: '',
+            confirmPassword: '',
           }}
           onSubmit={(values, { setErrors }) =>
             submitCredentials(values, setErrors)
@@ -74,9 +85,27 @@ const Signup = () => {
                   <FormText color="danger">{errors.password}</FormText>
                 )}
               </FormGroup>
+              <FormGroup row>
+                <Label>Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  className="form-control"
+                  placeholder="Reenter password"
+                  value={values.confirmPassword}
+                  onChange={handleChange}
+                />
+                {errors.confirmPassword && (
+                  <FormText color="danger">{errors.confirmPassword}</FormText>
+                )}
+              </FormGroup>
+
               <Button type="submit" color="primary" className="btn btn-block">
                 Submit
               </Button>
+              <p className="already-register text-right">
+                Already registered <Link to="/login">Log in?</Link>
+              </p>
             </Form>
           )}
         </Formik>

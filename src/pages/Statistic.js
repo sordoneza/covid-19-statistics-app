@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {
   ListGroup,
   ListGroupItem,
@@ -19,9 +19,15 @@ const StatisticItem = ({ stat }) => {
     tests: { total: totalTest },
     deaths: { total: totalDeaths },
   } = stat;
+
+  const history = useHistory();
+
   return (
     <>
-      <ListGroupItem className="list-group-item-action">
+      <ListGroupItem
+        className="list-group-item-action"
+        onDoubleClick={() => history.push(`/statistics/${country}`)}
+      >
         <ListGroupItemHeading>{country}</ListGroupItemHeading>
         <ListGroupItemText>
           {continent}{' '}
@@ -55,6 +61,7 @@ const StatisticItemContainer = ({ statistics }) => {
 const Statistict = () => {
   const fetchContext = useContext(FetchContext);
   const [statistics, setStatistics] = useState([]);
+  const [error, setError] = useState('');
 
   const getStatisticts = async ({ countryId } = {}) => {
     try {
@@ -69,10 +76,12 @@ const Statistict = () => {
       if (!countryId) {
         const { data } = await fetchContext.authAxios.get('/statistics');
 
+        setError('');
         setStatistics(data);
       }
     } catch (err) {
-      console.log(err);
+      setError('No results found for your search.');
+      setStatistics([]);
     }
   };
 
@@ -83,7 +92,11 @@ const Statistict = () => {
   return (
     <>
       <Search getStatisticts={getStatisticts} />
-      <StatisticItemContainer statistics={statistics} />
+      {error ? (
+        <em className="text-warning">{error}</em>
+      ) : (
+        <StatisticItemContainer statistics={statistics} />
+      )}
     </>
   );
 };
