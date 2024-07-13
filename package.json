@@ -7,7 +7,7 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
     "axios": "^1.6.4",
-    "bootstrap": "^4.6.0",
+    "bootstrap": "^5.0.0",
     "clsx": "^1.1.1",
     "formik": "^2.2.6",
     "numeral": "^2.0.6",
